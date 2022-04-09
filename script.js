@@ -1,84 +1,111 @@
-function capital(s){
-    return s.slice(0,1).toUpperCase() + s.slice(1).toLowerCase()
+const btns = document.querySelectorAll("#btn");
+const container = document.querySelector("#game");
+
+let wins = 0;
+let losses = 0;
+let games = 0;
+
+btns.forEach((button) => {
+    button.addEventListener('click', function(e) {
+        if (games === 5) {
+            resetGame();
+        }
+        let p = e.target.id;
+        let c = computerPlay();
+        console.log(p,c)
+        result = playRound(p,c);
+        updateScore(result,p,c);
+        console.log(wins,losses,games);    
+    })
+})
+
+function capitalFirst(s){
+    return s.slice(0,1).toUpperCase() + s.slice(1).toLowerCase();
 }
 
-function calculateWinner(win, lose){
-    if (win > lose) {
-        console.log(win + " wins to " + lose + " loses: Final Winner!")
+function calculateWinner(){
+    if (wins > losses) {
+        displayResult(wins + " wins to " + losses + " loses: You win!");
     }
-    else if(win < lose) {
-        console.log(win + " wins to " + lose + " loses: Defeated!")
+    else if(wins < losses) {
+        displayResult(wins + " wins to " + losses + " losses: You lose!");
     }
     else {
-        console.log(win + " wins to " + lose + " loses: Its a Tie!")
+        displayResult(wins + " wins to " + losses + " losses: Its a Tie!");
     }
 }
 
 function computerPlay(){
-    let hands = ["Rock","Paper","Scissors"]
-    return hands[Math.floor(Math.random() * 3)]
+    let hands = ["Rock","Paper","Scissors"];
+    return hands[Math.floor(Math.random() * 3)];
+}
+
+function displayResult(str){
+    const r = document.createElement('p');
+    r.textContent = str;
+    container.appendChild(r);
+}
+
+function updateScore(result,player,comp){
+    if (result == "win")
+        {
+            wins += 1;
+            displayResult(wins + ":" + losses + " " + player + " beats " + comp );
+        }
+    else if (result == "lose")
+        {
+            losses += 1;
+            displayResult(wins + ":" + losses  + " " + player + " loses to " + comp );
+        } 
+    else {
+        displayResult(wins + ":" + losses + " " + player + " ties with " + comp );
+    }
+    games += 1;
+    if (games === 5) {
+        calculateWinner();
+    }
+}
+
+function resetGame() {
+    wins = 0;
+    losses = 0;
+    games = 0;
+    while (container.firstChild) {
+        container.firstChild.remove();
+    }
 }
 
 function playRound(playerSelection, computerSelection) {
-    playerSelection = capital(playerSelection)
-    computerSelection = capital(computerSelection)
+    playerSelection = capitalFirst(playerSelection)
+    computerSelection = capitalFirst(computerSelection)
     if (playerSelection == computerSelection)
     {
-        console.log(playerSelection + " and " + computerSelection + " a Tie!")
-        return "tie"
+        return "tie";
     }
     if (playerSelection == "Rock") {
         if (computerSelection == "Scissors") {
-            console.log("You Win - " + playerSelection + " beats " + computerSelection) 
-            return "win"
+            return "win";
         }
         else {
-            console.log("You Lose - " + computerSelection + " beats " + playerSelection)
-            return "lose"
+            return "lose";
         }
     }
     else if  (playerSelection == "Scissors"){
         if (computerSelection == "Paper") {
-            console.log("You Win - " + playerSelection + " beats " + computerSelection) 
-            return "win"
+            return "win";
         }
         else {
-            console.log("You Lose - " + computerSelection + " beats " + playerSelection)
-            return "lose"
+            return "lose";
         }
     }
     else if  (playerSelection == "Paper"){
         if (computerSelection == "Rock") {
-            console.log("You Win - " + playerSelection + " beats " + computerSelection) 
-            return "win"
+            return "win";
         }
         else {
-            console.log("You Lose - " + computerSelection + " beats " + playerSelection)
-            return "lose"
+            return "lose";
         }
     }
 }
-
-function game() {
-    let games = 5
-    let wins = 0
-    let losses = 0
-    for (let index = 0; index < games; index++) {
-        p = prompt("")
-        c = computerPlay()
-        result = playRound(p,c)
-        if (result == "win")
-        {
-            wins += 1
-        }
-        if (result == "lose")
-        {
-            losses += 1
-        } 
-    }
-    calculateWinner(wins,losses)
-}
-
-game()
 
 
